@@ -39,13 +39,16 @@ root_soup = BeautifulSoup(companies.get_attribute('innerHTML'),'html.parser')
 
 arr_companies = []
 
-for link in root_soup.find_all('a', href=True)[:100:2]:
+for link in root_soup.find_all('a', href=True)[::2]:
     
     
     dict_company = {"name":None,
                     "trading_name":None,
                     "site":None,
                     "classification":None,
+                    "sector": None,
+                    "subsector": None,
+                    "segment": None,
                     "share_codes":None,
                     "common_shares":None,
                     "preffered_shares":None,
@@ -80,6 +83,13 @@ for link in root_soup.find_all('a', href=True)[:100:2]:
                     dict_company['site'] = (cols[1].text.strip())
                 elif 'Classificação Setorial:' in cols[0].text:
                     dict_company['classification'] = (cols[1].text.strip())
+                    try:
+                        classif_substring = cols[1].text.strip().split("/")
+                        dict_company['sector'] = classif_substring[0].strip()
+                        dict_company['subsector'] = classif_substring[1].strip()
+                        dict_company['segment'] = classif_substring[2].strip()
+                    except:
+                        None
                     
                 
         # SHARES INFO
